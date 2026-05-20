@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Gadget Store</title>
+    <style>
+        :root {
+            --surface: rgba(255, 255, 255, 0.09);
+            --cyan: #00f0ff;
+            --cyan-soft: #73f0ff;
+            --text: #f5f7ff;
+            --muted: #c8d3e3;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', Arial, sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(0, 240, 255, 0.18), transparent 22%),
+                        radial-gradient(circle at bottom right, rgba(166, 85, 255, 0.14), transparent 20%),
+                        linear-gradient(135deg, #121524 0%, #1d2335 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(18px);
+            background: rgba(10, 13, 24, 0.86);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 18px 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--cyan);
+        }
+
+        .brand::before {
+            content: '⚡';
+            font-size: 1.2rem;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 26px;
+            font-size: 0.95rem;
+            transition: color 0.25s ease;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        .page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 32px 0 48px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-text {
+            max-width: 640px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(0, 240, 255, 0.12);
+            color: var(--cyan-soft);
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            margin: 0 0 24px;
+            line-height: 1.02;
+        }
+
+        .hero p {
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 1.05rem;
+            margin: 0 0 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--cyan), #67e8ff);
+            color: #08101c;
+            box-shadow: 0 20px 45px rgba(0, 240, 255, 0.18);
+        }
+
+        .button-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 420px;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(4, 8, 21, 0.88) 100%);
+        }
+
+        .section {
+            margin-bottom: 42px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .card,
+        .feature-card,
+        .contact-card {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .feature-card {
+            display: grid;
+            gap: 18px;
+        }
+
+        .feature-card h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 240, 255, 0.5);
+        }
+
+        .product img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 18px;
+        }
+
+        .product h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .product p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 0.96rem;
+        }
+
+        .product .price {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .special-offers {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            min-width: 680px;
+        }
+
+        th,
+        td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        th {
+            color: var(--cyan);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.82rem;
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        tbody tr:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .info-list {
+            display: grid;
+            gap: 12px;
+            padding-left: 18px;
+            color: var(--muted);
+        }
+
+        .info-list li {
+            line-height: 1.75;
+        }
+
+        .contact-card {
+            display: grid;
+            gap: 16px;
+        }
+
+        .contact-card li {
+            margin-left: 1.1rem;
+            color: var(--muted);
+        }
+
+        form {
+            display: grid;
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--cyan);
+            background: rgba(255,255,255,0.1);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        footer {
+            padding: 20px 0 40px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero,
+            .grid-2,
+            .product-grid,
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav a {
+                margin-left: 16px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .topbar,
+            .page {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .hero {
+                gap: 18px;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .hero-visual {
+                min-height: 320px;
+            }
+
+            table {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="topbar">
+            <div class="brand">Tech Gadget Store</div>
+            <nav>
+                <a href="#products">Products</a>
+                <a href="#offers">Offers</a>
+                <a href="#about">Why Us</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="hero">
+            <div class="hero-text">
+                <span class="eyebrow">Premium gadgets</span>
+                <h1>Discover powerful tech with style and speed.</h1>
+                <p>
+                    Tech Gadget Store brings you the latest electronics with sleek design, superior performance, and unbeatable value.
+                    Shop smartphones, laptops, headphones, and smart accessories curated for modern lifestyles.
+                </p>
+                <div class="hero-actions">
+                    <a href="#products" class="button button-primary">Shop Featured</a>
+                    <a href="#contact" class="button button-secondary">Get in Touch</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" alt="Tech Banner" />
+            </div>
+        </section>
+
+        <section id="products" class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Featured Products</h2>
+                    <p style="color: var(--muted); margin: 8px 0 0;">
+                        Explore our top picks for performance, portability, and premium experience.
+                    </p>
+                </div>
+            </div>
+            <div class="product-grid">
+                <article class="product">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489c8190b9ee" alt="Smartphone" />
+                    <div>
+                        <h3>Smartphone X</h3>
+                        <p class="price">₹79,999</p>
+                        <p>Powerful display, fast connectivity, and a sleek form that's perfect for everyday use.</p>
+                    </div>
+                    <a href="#contact" class="button button-secondary">Buy Now</a>
+                </article>
+                <article class="product">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489c8190b9ee" alt="Laptop" />
+                    <div>
+                        <h3>Laptop Pro</h3>
+                        <p class="price">₹1,29,999</p>
+                        <p>Fast performance and premium build quality for work, content creation, and gaming.</p>
+                    </div>
+                    <a href="#contact" class="button button-secondary">Buy Now</a>
+                </article>
+                <article class="product">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489c8190b9ee" alt="Headphones" />
+                    <div>
+                        <h3>Headphones</h3>
+                        <p class="price">₹2,999</p>
+                        <p>Immersive sound with comfortable fit and crisp, clear audio for music and calls.</p>
+                    </div>
+                    <a href="#contact" class="button button-secondary">Buy Now</a>
+                </article>
+            </div>
+        </section>
+
+        <section id="offers" class="section">
+            <div class="section-header">
+                <h2>Special Offers</h2>
+            </div>
+            <div class="card special-offers">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Original Price</th>
+                            <th>Discount</th>
+                            <th>Final Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Smartphone X</td>
+                            <td>₹79,999</td>
+                            <td>20%</td>
+                            <td>₹63,999</td>
+                        </tr>
+                        <tr>
+                            <td>Laptop Pro</td>
+                            <td>₹1,29,999</td>
+                            <td>15%</td>
+                            <td>₹1,10,499</td>
+                        </tr>
+                        <tr>
+                            <td>Headphones</td>
+                            <td>₹2,999</td>
+                            <td>10%</td>
+                            <td>₹2,699</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2>Why Choose Us?</h2>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <p style="color: var(--muted); line-height: 1.8; margin: 0 0 20px;">
+                        At Tech Gadget Store, we offer premium technology with thoughtful design, dependable service, and fast delivery.
+                        Every product is chosen to deliver the best possible value for your budget.
+                    </p>
+                    <ul class="info-list">
+                        <li>Wide selection of gadgets for every need.</li>
+                        <li>Competitive prices and seasonal discounts.</li>
+                        <li>Exceptional customer service and support.</li>
+                        <li>Fast shipping across India.</li>
+                        <li>Secure shopping experience every time.</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>What makes us special</h3>
+                    <p>We blend style and technology for customers who want modern devices, reliable value, and a shopping experience they can trust.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="section-header">
+                <h2>Contact Us</h2>
+            </div>
+            <div class="cards-grid">
+                <article class="contact-card">
+                    <h3>Reach Out Anytime</h3>
+                    <ul>
+                        <li>Email: meenish.g@gmail.com</li>
+                        <li>Phone: +91 89194 15489</li>
+                        <li>Address: 123 Hello World, Hypertext City, India</li>
+                    </ul>
+                </article>
+                <article class="card">
+                    <h3>Feedback Form</h3>
+                    <form action="/submit-feedback" method="post">
+                        <div>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required />
+                        </div>
+                        <div>
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required />
+                        </div>
+                        <div>
+                            <label for="favorite_product">Favorite Product</label>
+                            <input type="text" id="favorite_product" name="favorite_product" required />
+                        </div>
+                        <div>
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="button button-primary">Submit Feedback</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 Tech Gadget Store. Designed for modern technology shoppers.
+    </footer>
+</body>
